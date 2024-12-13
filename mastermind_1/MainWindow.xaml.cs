@@ -26,7 +26,7 @@ namespace mastermind_1
         string[] chosenColor = new string[4];
         string[] allColors = { "white", "green", "blue", "red", "orange", "yellow" };
         int score;
-        string[] userName = new string[15];
+        private string playerName;
         public MainWindow()
         {
             
@@ -249,22 +249,29 @@ private void GenerateFeedback(string[] userColors) {
             }
 
         }
-        private void StartGame()
+
+      
+        private string StartGame()
         {
+            string playerName = string.Empty;
+            while (string.IsNullOrWhiteSpace(playerName)) {
+                
+                playerName = Interaction.InputBox("Wat is your name?", "Name");
+               
+                
+                if (string.IsNullOrWhiteSpace(playerName))
+                {
+                    MessageBox.Show("Naam mag niet leeg zijn", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            
+            return playerName;
         }
         private void NieuwSpel_Click(object sender, RoutedEventArgs e)
         {
-            userName[0] = Interaction.InputBox("Wat is your name?", "Name");
-            if (userName.Length == 0)
-            {
-                MessageBox.Show("Add your name", "Error", MessageBoxButton.OKCancel);
-                Interaction.InputBox("Wat is your name?", "Name");
-            }
-            else
-            {
-                StartGame();
-
-            }
+            string playerName = StartGame();
+            attempts = 1;
+            GenerateCode();
             }
         private void StopGame(object sender, RoutedEventArgs e)
         {
@@ -315,7 +322,7 @@ private void GenerateFeedback(string[] userColors) {
             }
             while (attempts == attemptsNumber)
             {
-                StopGame();
+               // StopGame();
             };
         }
     }
