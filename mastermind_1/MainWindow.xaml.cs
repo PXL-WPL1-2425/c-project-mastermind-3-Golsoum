@@ -93,6 +93,7 @@ private void GenerateFeedback(string[] userColors) {
         private void StopCountDown()
         {
             timer.Stop();
+            
 
         }
         private void Timer_Tick(object sender, EventArgs e)
@@ -158,7 +159,8 @@ private void GenerateFeedback(string[] userColors) {
             if (attempts > 10) 
             {
                 
-                StopCountDown(); 
+                StopCountDown();
+                StopGame();
                 return;
             }
             attempts++;
@@ -273,9 +275,9 @@ private void GenerateFeedback(string[] userColors) {
             attempts = 1;
             GenerateCode();
             }
-        private void StopGame(object sender, RoutedEventArgs e)
+        private void StopGame()
         {
-            MessageBox.Show("Game is finished!", "FINISH", MessageBoxButton.OK);
+            MessageBox.Show("Game is finished!", "FINISH", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         private void HighScore_Click(object sender, RoutedEventArgs e)
         {
