@@ -29,6 +29,7 @@ namespace mastermind_1
         private string playerName;
         private string[] highScores = new string[15];
         private int highScoreCount = 0;
+        private int maxAttempts = 10;
         public MainWindow()
         {
             
@@ -177,11 +178,12 @@ private void GenerateFeedback(string[] userColors) {
         {
             
            
-            if (attempts > 10) 
+            if (attempts > maxAttempts) 
             {
                 
                 StopCountDown();
                 StopGame();
+                MessageBox.Show("You reached maximum number of attempts", "Game ended", MessageBoxButton.OK);
                 return;
             }
             attempts++;
@@ -322,30 +324,18 @@ private void GenerateFeedback(string[] userColors) {
 
         private void AantalPogingen_Click(object sender, RoutedEventArgs e)
         {
+            string input;
             int attemptsNumber;
-            attemptsNumber = int.Parse(Interaction.InputBox("How many tries do you want for the game?", "poging"));
-           /* if (attemptsNumber >= 3 || attemptsNumber <= 20)
+            do
             {
-                if(e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9 )
+               input = Interaction.InputBox("How many tries do you want for the game?", "poging", maxAttempts.ToString());
+
+                if(!int.TryParse(input, out attemptsNumber) || attemptsNumber < 3 || attemptsNumber > 20 )
                 {
-                    e.Handled = false;
+                    MessageBox.Show("Add a number between 3 and 20", "Invalid number", MessageBoxButton.OK);
                 }
-                else if (e.Key >= Key.D0 && e.Key <= Key.D9 && e.KeyboardDevice.Modifiers == ModifierKeys.Shift) {
-                    e.Handled = false;
-                }
-                else
-                {
-                    e.Handled= true;
-                }
-            }
-            else
-            {
-                MessageBox.Show("inter a number between 3 and 20", "attempts", MessageBoxButton.OK);
-            }
-            while (attempts == attemptsNumber)
-            {
-               // StopGame();
-            };*/
+            } while(attemptsNumber > 3 || attemptsNumber > 20);
+            maxAttempts = attemptsNumber;
         }
     }
 }
