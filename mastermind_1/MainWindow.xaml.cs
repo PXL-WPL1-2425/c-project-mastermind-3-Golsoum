@@ -26,7 +26,7 @@ namespace mastermind_1
         string[] chosenColor = new string[4];
         string[] allColors = { "white", "green", "blue", "red", "orange", "yellow" };
         int score;
-        private string playerName;
+      private string playerName;
         private string[] highScores = new string[15];
         private int highScoreCount = 0;
         private int maxAttempts = 10;
@@ -50,8 +50,6 @@ namespace mastermind_1
 
             GenerateCode();
 
-
-
             codeTextBox.Text = $"{string.Join(", ", chosenColor)}";
             FillComboBoxes(ref allColors);
             
@@ -59,7 +57,7 @@ namespace mastermind_1
 
         private void UpdateTitle()
         {
-            Mastermind.Title = $"player: {playerName}, attempt: {attempts} from {maxAttempts}";
+            Mastermind.Title = $"player: {playerNames[currentPlayerIndex]}, attempt: {attempts} from {maxAttempts}";
         }
         private void AddHighScore(string playerName, int attempts)
         {
@@ -80,14 +78,14 @@ namespace mastermind_1
                 highScores[highScores.Length - 1] = highScoreEntry;
             }
         }
-private void GenerateFeedback(string[] userColors) {
+        private void GenerateFeedback(string[] userColors) {
 
-    int correctposition = 0;
-    int correctColor = 0;
+         int correctposition = 0;
+         int correctColor = 0;
 
-    Dictionary<string, int> colorCounts = new Dictionary<string, int>();
+        Dictionary<string, int> colorCounts = new Dictionary<string, int>();
 
-    foreach(var color in chosenColor)
+         foreach(var color in chosenColor)
     {
         if (colorCounts.ContainsKey(color))
         {
@@ -188,7 +186,7 @@ private void GenerateFeedback(string[] userColors) {
             {
                 
                 StopCountDown();
-                StopGame();
+                StopGame(false);
                 MessageBox.Show("You reached maximum number of attempts", "Game ended", MessageBoxButton.OK);
                 return;
             }
@@ -249,9 +247,7 @@ private void GenerateFeedback(string[] userColors) {
         }
         private void controlButton_Click(object sender, RoutedEventArgs e)
         {
-            HandleAttempt();
-
-
+            bool isWinner = true;
 
             string[] userPickedColors =  {
                                  firstComboBox.SelectedItem.ToString(),
@@ -270,15 +266,23 @@ private void GenerateFeedback(string[] userColors) {
                 else if(chosenColor.Contains(userPickedColors[i])) {
                    
                     SetBorderColor(i, Colors.Wheat);
-
+                    isWinner = false;
                 }
                 else
                 {
                     SetBorderColor(i, Colors.Transparent);
-
+                    isWinner = false;
                 }
             }
 
+            if(isWinner)
+            {
+                StopGame(true);
+            }
+            else
+            {
+                HandleAttempt();
+            }
         }
 
       
@@ -325,10 +329,42 @@ private void GenerateFeedback(string[] userColors) {
             GenerateCode();
             UpdateTitle();
             }
-        private void StopGame()
+        private void StopGame(bool isWinner)
         {
-            AddHighScore(playerName, attempts);
-            MessageBox.Show("Game is finished!", "FINISH", MessageBoxButton.OK, MessageBoxImage.Information);
+            string message;
+            if (isWinner)
+            {
+                message = $"Code is cracked in {attempts} attempts!\n";
+
+            }
+            else {
+
+                string correctCode = string.Join(", ", chosenColor);
+                message = $"You failed! The correct code was {correctCode}.\n";
+            
+            
+            }
+            AddHighScore(playerNames[currentPlayerIndex], attempts);
+
+            string currentPlayer = playerNames[currentPlayerIndex];
+           
+
+            if (currentPlayerIndex + 1 < playerNames.Count)
+            {
+                string nextPlayer = playerNames[currentPlayerIndex + 1];
+                message += $"Now it is {nextPlayer}'s turn";
+                currentPlayerIndex++;
+
+                attempts = 1;
+                GenerateCode();
+                UpdateTitle();
+            
+            }
+            else
+            {
+                message += "All players have finished their game";
+            }
+            MessageBox.Show(message, "Game over", MessageBoxButton.OK, MessageBoxImage.Information); 
         }
         private void HighScore_Click(object sender, RoutedEventArgs e)
         {
