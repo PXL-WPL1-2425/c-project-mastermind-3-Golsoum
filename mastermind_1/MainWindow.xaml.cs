@@ -57,7 +57,7 @@ namespace mastermind_1
 
         private void UpdateTitle()
         {
-            Mastermind.Title = $"player: {playerNames[currentPlayerIndex]}, attempt: {attempts} from {maxAttempts}";
+            Mastermind.Title = $"player: {playerNames[currentPlayerIndex]}, attempt: {attempts} from {maxAttempts}, score: {score}";
         }
         private void AddHighScore(string playerName, int attempts)
         {
