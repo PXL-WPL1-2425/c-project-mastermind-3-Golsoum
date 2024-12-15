@@ -255,7 +255,7 @@ namespace mastermind_1
         }
 
 
-        private void SetBorderColor(int index, Color color)
+        private void SetBorderColor(int index, Color color, string tooltipText)
         {
             SolidColorBrush borderBrush = new SolidColorBrush(color);
             switch (index)
@@ -263,18 +263,22 @@ namespace mastermind_1
                 case 0:
                     firstLabel.BorderBrush = borderBrush;
                     firstLabel.BorderThickness = new Thickness(2);
+                    firstLabel.ToolTip = tooltipText;
                     break;
                 case 1:
                     secondLabel.BorderBrush = borderBrush;
                     secondLabel.BorderThickness = new Thickness(2);
+                    secondLabel.ToolTip = tooltipText;
                     break;
                 case 2:
                     thirdLabel.BorderBrush = borderBrush;
                     thirdLabel.BorderThickness = new Thickness(2);
+                    thirdLabel.ToolTip = tooltipText;
                     break;
                 case 3:
                     fourthLabel.BorderBrush = borderBrush;
                     fourthLabel.BorderThickness = new Thickness(2);
+                    fourthLabel.ToolTip = tooltipText;
                     break;
             }
         }
@@ -293,17 +297,17 @@ namespace mastermind_1
             {
                 if (userPickedColors[i] == chosenColor[i])
                 {
-                    SetBorderColor(i, Colors.DarkRed);
+                    SetBorderColor(i, Colors.DarkRed, "Correct Color. Correct Position");
 
                 }
                 else if(chosenColor.Contains(userPickedColors[i])) {
                    
-                    SetBorderColor(i, Colors.Wheat);
+                    SetBorderColor(i, Colors.Wheat, "Correct Color, Wrong Position");
                     isWinner = false;
                 }
                 else
                 {
-                    SetBorderColor(i, Colors.Transparent);
+                    SetBorderColor(i, Colors.Transparent, "Wrong Color");
                     isWinner = false;
                 }
             }
