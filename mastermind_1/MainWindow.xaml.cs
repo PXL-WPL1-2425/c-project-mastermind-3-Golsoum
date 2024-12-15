@@ -27,6 +27,8 @@ namespace mastermind_1
         string[] allColors = { "white", "green", "blue", "red", "orange", "yellow" };
         int score;
         private string playerName;
+        private string[] highScores = new string[15];
+        private int highScoreCount = 0;
         public MainWindow()
         {
             
@@ -52,6 +54,25 @@ namespace mastermind_1
             
         }
 
+        private void AddHighScore(string playerName, int attempts)
+        {
+            string highScoreEntry = $"{playerName} - {attempts} pogingen - {score} /100";
+
+            if (highScoreCount < 15)
+            {
+                highScores[highScoreCount] = highScoreEntry;
+                highScoreCount++;
+            }
+            else
+            {
+                for(int i =1; i< highScores.Length; i++)
+                {
+                    highScores[i - 1] = highScores[i];
+                   
+                }
+                highScores[highScores.Length - 1] = highScoreEntry;
+            }
+        }
 private void GenerateFeedback(string[] userColors) {
 
     int correctposition = 0;
@@ -271,26 +292,25 @@ private void GenerateFeedback(string[] userColors) {
         }
         private void NieuwSpel_Click(object sender, RoutedEventArgs e)
         {
-            string playerName = StartGame();
+             playerName = StartGame();
             attempts = 1;
             GenerateCode();
             }
         private void StopGame()
         {
+            AddHighScore(playerName, attempts);
             MessageBox.Show("Game is finished!", "FINISH", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         private void HighScore_Click(object sender, RoutedEventArgs e)
         {
-            
-            int[] highestScores = new int[15];
-
-            for (int i = 0; i < highestScores.Length; i++) {
-                if (score > highestScores[i])
-                {
-                    highestScores[i] = score;
-                }
+           StringBuilder highScoreList = new StringBuilder("Highscores:\n");
+            for(int i = 0; i < highScoreCount; i ++)
+            {
+                highScoreList.AppendLine(highScores[i]);
             }
-            MessageBox.Show($"{userName} - {attempts} pogingen - {highestScores}/100 ");
+            
+            
+            MessageBox.Show(highScoreList.ToString(), "Highscores", MessageBoxButton.OK, MessageBoxImage.Information);
 
         }
 
@@ -300,11 +320,11 @@ private void GenerateFeedback(string[] userColors) {
 
         }
 
-        private void AantalPogingen_Click(object sender, KeyEventArgs e)
+        private void AantalPogingen_Click(object sender, RoutedEventArgs e)
         {
             int attemptsNumber;
             attemptsNumber = int.Parse(Interaction.InputBox("How many tries do you want for the game?", "poging"));
-            if (attemptsNumber >= 3 || attemptsNumber <= 20)
+           /* if (attemptsNumber >= 3 || attemptsNumber <= 20)
             {
                 if(e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9 )
                 {
@@ -325,7 +345,7 @@ private void GenerateFeedback(string[] userColors) {
             while (attempts == attemptsNumber)
             {
                // StopGame();
-            };
+            };*/
         }
     }
 }
