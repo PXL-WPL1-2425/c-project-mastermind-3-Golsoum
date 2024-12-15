@@ -30,6 +30,8 @@ namespace mastermind_1
         private string[] highScores = new string[15];
         private int highScoreCount = 0;
         private int maxAttempts = 10;
+        private List<string> playerNames = new List<string>();
+        private int currentPlayerIndex = 0;
         public MainWindow()
         {
             
@@ -55,6 +57,10 @@ namespace mastermind_1
             
         }
 
+        private void UpdateTitle()
+        {
+            Mastermind.Title = $"player: {playerName}, attempt: {attempts} from {maxAttempts}";
+        }
         private void AddHighScore(string playerName, int attempts)
         {
             string highScoreEntry = $"{playerName} - {attempts} pogingen - {score} /100";
@@ -187,7 +193,7 @@ private void GenerateFeedback(string[] userColors) {
                 return;
             }
             attempts++;
-            Mastermind.Title = $"Poging {attempts}";
+            UpdateTitle();
             StartCountDown(); 
         }
         private void FillComboBoxes(ref string[] items)
@@ -276,27 +282,48 @@ private void GenerateFeedback(string[] userColors) {
         }
 
       
-        private string StartGame()
+        private List<string> StartGame()
         {
-            string playerName = string.Empty;
-            while (string.IsNullOrWhiteSpace(playerName)) {
-                
-                playerName = Interaction.InputBox("Wat is your name?", "Name");
-               
-                
-                if (string.IsNullOrWhiteSpace(playerName))
+            string inputName;
+            string response = string.Empty;
+
+            do
+            {
+                inputName = Microsoft.VisualBasic.Interaction.InputBox("Add a name:", "Add name");
+
+                if (string.IsNullOrWhiteSpace(inputName))
                 {
-                    MessageBox.Show("Naam mag niet leeg zijn", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Name should not be empty", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    continue;
+
                 }
-            }
+
+                playerNames.Add(inputName);
+
+                response = Microsoft.VisualBasic.Interaction.InputBox("Do you want to add a new name? yes/no", "Add New Name");
+            } while (!String.IsNullOrWhiteSpace(response) && response.Equals("yes", StringComparison.OrdinalIgnoreCase));
+
+            MessageBox.Show($"registered names: {string.Join(", ", playerNames).ToUpper()}", "PLAYERS NAME", MessageBoxButton.OK,MessageBoxImage.Information);
             
-            return playerName;
+            
+            return playerNames;
         }
         private void NieuwSpel_Click(object sender, RoutedEventArgs e)
         {
-             playerName = StartGame();
+             playerNames = StartGame();
             attempts = 1;
+            currentPlayerIndex = 0;
+            if (playerNames.Count > 0) { 
+            
+            playerName = playerNames[currentPlayerIndex];
+                MessageBox.Show($"It's {playerName} turn", "Upate name",MessageBoxButton.OK);
+            }
+            else
+            {
+                MessageBox.Show("No name registered!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             GenerateCode();
+            UpdateTitle();
             }
         private void StopGame()
         {
