@@ -26,13 +26,15 @@ namespace mastermind_1
         string[] chosenColor = new string[4];
         string[] allColors = { "white", "green", "blue", "red", "orange", "yellow" };
         int score;
-      private string playerName;
+        private string playerName;
         private string[] highScores = new string[15];
         private int highScoreCount = 0;
         private int maxAttempts = 10;
         private List<string> playerNames = new List<string>();
+        private Random rnd = new Random();
+
         private int currentPlayerIndex = 0;
-        public MainWindow()
+       public MainWindow()
         {
             
             InitializeComponent();
@@ -55,6 +57,38 @@ namespace mastermind_1
             
         }
 
+        private void ShowCorrectColor()
+        {
+            int randomIndex = rnd.Next(0, chosenColor.Length);
+
+            
+            string correctColor = chosenColor[randomIndex];
+            MessageBox.Show($"One of the correct color is: {correctColor}", "Hint: Correct color", MessageBoxButton.OK, MessageBoxImage.Information);
+
+        }
+        private void ShowCorrectColorAndPosition()
+        {
+            int randomIndex = rnd.Next(0, chosenColor.Length);
+            string correctColor = chosenColor[randomIndex];
+            MessageBox.Show("The correct position is {randomIndex +1} is: {correctColor}", "Hint: Correct color and position", MessageBoxButton.OK);
+        }
+        private void Hint()
+        {
+            string choice = Microsoft.VisualBasic.Interaction.InputBox("Which hint do you want to buy?\n 1.Correct color (-15points) \n 2.Correct color in correct place(-25 points)", "Buy a hint");
+            if (choice == "1")
+            {
+                ShowCorrectColor();
+                score -= 15;
+                MessageBox.Show($"Your score will be {score}", "new score", MessageBoxButton.OK);
+
+            }
+            else if (choice == "2") {
+                ShowCorrectColorAndPosition();
+                score -= 25;
+                MessageBox.Show($"Your score will be {score}", "new score", MessageBoxButton.OK);
+            }
+            UpdateTitle();
+        }
         private void UpdateTitle()
         {
             Mastermind.Title = $"player: {playerNames[currentPlayerIndex]}, attempt: {attempts} from {maxAttempts}, score: {score}";
@@ -106,7 +140,6 @@ namespace mastermind_1
         private void GenerateCode()
         {
 
-            Random rnd = new Random();
             for (int i = 0; i < 4; i++)
             {
                 int color = rnd.Next(allColors.Length);
@@ -161,7 +194,7 @@ namespace mastermind_1
                         firstLabel.Background = colorBrush;
 /*                        firstLabel.Content = selectedColor;
 */
-                        break;
+            break;
                     case "secondComboBox":
                         secondLabel.Background = colorBrush;
 /*                        secondLabel.Content = selectedColor;
@@ -399,6 +432,12 @@ namespace mastermind_1
                 }
             } while(attemptsNumber > 3 || attemptsNumber > 20);
             maxAttempts = attemptsNumber;
+        }
+
+        private void hintButton_Click(object sender, RoutedEventArgs e)
+        {
+            Hint();
+
         }
     }
 }
